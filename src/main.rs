@@ -79,8 +79,9 @@ async fn write_entire_mem_representation_into_provided_db(unlocked_connection: A
     {
         let mut statement = transaction.prepare("INSERT INTO withdrawals (crane_id, steam_id, specific_withdrawn, received_at) VALUES (?1, ?2, ?3, ?4)")?;
         for new_withdrawal in mem_representation {
+            let new_sea_creatures = &new_withdrawal.specific_withdrawn.creatures.to_vec();
             statement.execute(
-                (new_withdrawal.crane_id, new_withdrawal.steam_id.to_u64(), bincode::serialize(&new_withdrawal.specific_withdrawn).unwrap(), new_withdrawal.received_at.clone().to_u64())
+                (new_withdrawal.crane_id, new_withdrawal.steam_id.to_u64(), bincode::serialize(new_sea_creatures).unwrap(), new_withdrawal.received_at.clone().to_u64())
             ).unwrap();
         }
     }
